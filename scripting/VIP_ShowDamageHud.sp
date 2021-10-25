@@ -12,7 +12,7 @@ public Plugin myinfo =
 };
 
 static const char g_sFeature[] = "Showdamagehud";
-static char sColors[11], sBuffer[3][3];
+static char sColors[11], sBuffer[3][4];
 static float fFadeIn, fFadeOut, fHoldTime, fCoorX, fCoorY;
 
 public void OnPluginStart()
@@ -48,14 +48,14 @@ public void OnPluginStart()
 	ExplodeString(sColors, " ", sBuffer, sizeof(sBuffer), sizeof(sBuffer[]));
 }
 
-public void VIP_OnVIPLoaded(){VIP_RegisterFeature(g_sFeature, BOOL);}
-
 public void OnColorsChange(Handle ConVars, const char[] oldValue, const char[] newValue){GetConVarString(ConVars, sColors, sizeof(sColors));ExplodeString(sColors, " ", sBuffer, sizeof(sBuffer), sizeof(sBuffer[]));}
 public void OnFadeInChange(Handle ConVars, const char[] oldValue, const char[] newValue){fFadeIn = GetConVarFloat(ConVars);}
 public void OnFadeOutChange(Handle ConVars, const char[] oldValue, const char[] newValue){fFadeOut = GetConVarFloat(ConVars);}
 public void OnHoldTimeChange(Handle ConVars, const char[] oldValue, const char[] newValue){fHoldTime = GetConVarFloat(ConVars);}
 public void OnCoorXChange(Handle ConVars, const char[] oldValue, const char[] newValue){fCoorX = GetConVarFloat(ConVars);}
 public void OnCoorYChange(Handle ConVars, const char[] oldValue, const char[] newValue){fCoorY = GetConVarFloat(ConVars);}
+
+public void VIP_OnVIPLoaded(){VIP_RegisterFeature(g_sFeature, BOOL);}
 
 public void OnPluginEnd()
 {
