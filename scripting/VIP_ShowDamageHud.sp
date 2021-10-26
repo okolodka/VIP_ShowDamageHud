@@ -5,7 +5,8 @@
 
 public Plugin myinfo = 
 {
-    name = "[VIP] Bhop",
+    name = "[VIP] Show Damage HUD",
+	description = "Show Damage in HUD (for VIP)",
     author = "Drumanid (Fork by PSIH :{ )",
     version = "1.0.0",
     url = "https://github.com/0RaKlE19/VIP_ShowDamageHud"
