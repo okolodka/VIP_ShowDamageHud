@@ -66,10 +66,11 @@ public void OnPluginEnd()
 
 void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(event.GetInt("attacker"));
-	if(iClient && VIP_IsClientFeatureUse(iClient, g_sFeature))
+	int iAttacker = GetClientOfUserId(event.GetInt("attacker"));
+	int iClient = GetClientOfUserId(event.GetInt("userid"));
+	if(iAttacker && VIP_IsClientFeatureUse(iAttacker, g_sFeature) && (GetClientTeam(iAttacker) != GetClientTeam(iClient)))
 	{
 		SetHudTextParams(fCoorX, fCoorY, fHoldTime, StringToInt(sBuffer[0]), StringToInt(sBuffer[1]), StringToInt(sBuffer[2]), 255, 0, 0.0, fFadeIn, fFadeOut);
-		ShowHudText(iClient, 6, "-%i", event.GetInt("dmg_health"));
+		ShowHudText(iAttacker, 6, "-%i", event.GetInt("dmg_health"));
 	}
 }
