@@ -68,7 +68,9 @@ void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
 	int iAttacker = GetClientOfUserId(event.GetInt("attacker"));
 	int iClient = GetClientOfUserId(event.GetInt("userid"));
-	if(iAttacker && VIP_IsClientFeatureUse(iAttacker, g_sFeature) && (GetClientTeam(iAttacker) != GetClientTeam(iClient)))
+	char sWeapon[36];
+	GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
+	if(iAttacker && VIP_IsClientFeatureUse(iAttacker, g_sFeature) && (GetClientTeam(iAttacker) != GetClientTeam(iClient)) &&  !StrEqual(sWeapon, "molotov", false) && !StrEqual(sWeapon, "hegrenade", false))
 	{
 		SetHudTextParams(fCoorX, fCoorY, fHoldTime, StringToInt(sBuffer[0]), StringToInt(sBuffer[1]), StringToInt(sBuffer[2]), 255, 0, 0.0, fFadeIn, fFadeOut);
 		ShowHudText(iAttacker, 6, "-%i", event.GetInt("dmg_health"));
