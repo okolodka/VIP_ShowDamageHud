@@ -1,3 +1,6 @@
+// #changelog:
+//	1.1.0 - Compile for SM 1.11 & fix show molotov damages
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -5,11 +8,11 @@
 
 public Plugin myinfo = 
 {
-    name = "[VIP] Show Damage HUD",
+	name = "[VIP] Show Damage HUD",
 	description = "Show Damage in HUD (for VIP)",
-    author = "Drumanid (Fork by PSIH :{ )",
-    version = "1.0.0",
-    url = "https://github.com/0RaKlE19/VIP_ShowDamageHud"
+	author = "Drumanid (Fork by PSIH :{ )",
+	version = "1.1.0",
+	url = "https://github.com/0RaKlE19/VIP_ShowDamageHud"
 };
 
 static const char g_sFeature[] = "Showdamagehud";
@@ -18,31 +21,31 @@ static float fFadeIn, fFadeOut, fHoldTime, fCoorX, fCoorY;
 
 public void OnPluginStart()
 {
-    if(VIP_IsVIPLoaded())
-        VIP_OnVIPLoaded();
+	if(VIP_IsVIPLoaded())
+		VIP_OnVIPLoaded();
 	
-    Handle hRegister;
-        
-    HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_color", "255 0 0", "RGB (Red, Green, Blue)", 0, false, 0.0, false), OnColorsChange);
+	Handle hRegister;
+		
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_color", "255 0 0", "RGB (Red, Green, Blue)", 0, false, 0.0, false), OnColorsChange);
 	GetConVarString(hRegister, sColors, sizeof(sColors));
 
-	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_fade_in", "0.5", "Время полностью отображаемого худа на экране", 0, true, 0.0, false), OnFadeInChange);
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_fade_in", "0.5", "Час за який HUD повністю відображається на екрані", 0, true, 0.0, false), OnFadeInChange);
 	fFadeIn = GetConVarFloat(hRegister);
 
-	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_fade_out", "0.5", "Время исчезающего худа на экране", 0, true, 0.0, false), OnFadeOutChange);
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_fade_out", "0.5", "Час за який HUD зникає з екрану", 0, true, 0.0, false), OnFadeOutChange);
 	fFadeOut = GetConVarFloat(hRegister);
 
-	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_hold_time", "1.0", "Время убийства худа на экране", 0, true, 0.0, false), OnHoldTimeChange);
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_hold_time", "1.0", "Час відображення HUD на екрані", 0, true, 0.0, false), OnHoldTimeChange);
 	fHoldTime = GetConVarFloat(hRegister);
 
-	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_coor_x", "0.50", "Координаты (0.0 = Влево, 1.0 = Вправо)", 0, true, 0.0, true, 1.0), OnCoorXChange);
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_coor_x", "0.50", "Координати (0.0 = Вліво, 1.0 = Вправо)", 0, true, 0.0, true, 1.0), OnCoorXChange);
 	fCoorX = GetConVarFloat(hRegister);
 
-	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_coor_y", "0.60", "Координаты (0.0 = Вверх, 1.0 = Вниз)", 0, true, 0.0, true, 1.0), OnCoorYChange);
+	HookConVarChange(hRegister = CreateConVar("sm_vip_showdamagehud_coor_y", "0.60", "Координати (0.0 = Вверх, 1.0 = Вниз)", 0, true, 0.0, true, 1.0), OnCoorYChange);
 	fCoorY = GetConVarFloat(hRegister);
 	
 	AutoExecConfig(true, "VIP_ShowDamageHud", "vip");
-    CloseHandle(hRegister);
+	CloseHandle(hRegister);
 
 	HookEvent("player_hurt", PlayerHurt);
 	
@@ -70,7 +73,8 @@ void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	char sWeapon[36];
 	GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
-	if(iAttacker && VIP_IsClientFeatureUse(iAttacker, g_sFeature) && (GetClientTeam(iAttacker) != GetClientTeam(iClient)) &&  !StrEqual(sWeapon, "molotov", false) && !StrEqual(sWeapon, "hegrenade", false))
+	PrintToChat(iAttacker, "Weapon: %s", sWeapon);
+	if(iAttacker && VIP_IsClientFeatureUse(iAttacker, g_sFeature) && (GetClientTeam(iAttacker) != GetClientTeam(iClient)) && !StrEqual(sWeapon, "molotov", false) && !StrEqual(sWeapon, "hegrenade", false))
 	{
 		SetHudTextParams(fCoorX, fCoorY, fHoldTime, StringToInt(sBuffer[0]), StringToInt(sBuffer[1]), StringToInt(sBuffer[2]), 255, 0, 0.0, fFadeIn, fFadeOut);
 		ShowHudText(iAttacker, 6, "-%i", event.GetInt("dmg_health"));
